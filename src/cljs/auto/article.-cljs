@@ -1,0 +1,72 @@
+;(ns admin.article
+;  (:require-macros [cljs.core.async.macros :refer [go]])
+;  (:require [goog.events :as events]
+;            [om.core :as om :include-macros true]
+;            [sablono.core :as html :refer-macros [html]]
+;            [om-tools.core :refer-macros [defcomponent]]
+;            [cljs.core.async :refer [<! chan put!]]
+;            [admin.api :as api]))
+;
+;(def update-chan (chan))
+;(def save-article-chan (chan))
+;
+;(defn get-text [data]
+;  (:text (:article @data)))
+;
+;(defcomponent edit-form [data _]
+;  (render [_]
+;    (html [:div.edit-area
+;           [:textarea {:onChange      (fn [e] (let [val (.. e -target -value)]
+;                                                (put! update-chan val)
+;                                                (om/transact! data :article #(merge % {:text val}))))
+;                       :default-value (get-text data)}]])))
+;
+;(defcomponent preview [data _]
+;  (will-mount [_]
+;    (go (loop []
+;          (let [changed-data (<! update-chan)
+;                marked (js/marked changed-data)]
+;            (om/update! data :preview marked)
+;            (recur)))))
+;  (render-state [_ _]
+;    (html
+;      [:div.preview-area {:dangerouslySetInnerHTML {:__html (:preview @data)}}])))
+;
+;(defcomponent control-buttons [data _]
+;  (render [_]
+;    (html [:div [:button.btn.btn-primary
+;                 {:onClick #(put! save-article-chan (:article data))}
+;                 "Save"]])))
+;
+;(defcomponent article [data _]
+;  (will-mount [_]
+;    ; Init state
+;    (go (let [art (<! (api/get-article (:id @data)))]
+;          (om/update! data :article art)
+;          (put! update-chan (get-text data))))
+;    ; Save handler
+;    (go (loop []
+;          (let [art (<! save-article-chan)]
+;            (prn art)
+;            (go (<! (api/save-article art))))
+;          (recur))))
+;  (render [_]
+;    (html
+;      [:div
+;       [:div.row [:div.col-lg-12 [:h1 (:name (:article @data))]]]
+;       (if (contains? @data :article)
+;         [:div.row
+;          [:div.col-md-6
+;           [:div.panel.panel-default
+;            [:div.panel-heading "Article"]
+;            [:div.panel-body (om/build edit-form data)]]]
+;          [:div.col-md-6
+;           [:div.panel.panel-default
+;            [:div.panel-heading "Preview"]
+;            [:div.panel-body (om/build preview data)]]]
+;          [:div.col-md-12
+;           [:div.panel.panel-default
+;            [:div.panel-body (om/build control-buttons data)]]]
+;          ]
+;         [:div.row [:div "Loading..."]])]
+;      )))

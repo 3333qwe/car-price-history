@@ -1,0 +1,24 @@
+;(ns admin.articles
+;  (:require-macros [cljs.core.async.macros :refer [go]])
+;  (:require [om.core :as om :include-macros true]
+;            [sablono.core :as html :refer-macros [html]]
+;            [om-tools.core :refer-macros [defcomponent]]
+;            [usnbrs-admin-client.api :as api]
+;            [cljs.core.async :refer [<!]]))
+;
+;(defcomponent article-link [{:keys [data item]} owner]
+;  (render [_]
+;    (html [:div [:a {:href (str "#/article/" (:id item))} (:name item)]])))
+;
+;(defcomponent articles [data owner]
+;  (will-mount [_]
+;    (go (let [articles (<! (api/get-all-articles))]
+;          (om/update! data ::brands articles))))
+;  (render [_]
+;    (html
+;      [:div.row
+;       [:div.col-lg-12
+;        [:div.panel.panel-default
+;         [:div.panel-heading "Articles"]
+;         [:div.panel-body (map #(om/build article-link {:data data :item %}) (::brands data))]
+;         ]]])))

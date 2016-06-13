@@ -18,26 +18,22 @@
 (def history (History.))
 
 (def menu-state
-  (atom [{:name "Dashboard" :path "/"}
-         {:name "Articles" :path "/articles"}]))
+  (atom []))
 
-; State of the page with all brands
+; State of the application
 (def app-state (atom {}))
-; State of the page with specific brand
-(def brand-state (atom {}))
 
-(defn render-brand [params]
+(defn app [params]
   (go
-    (if-not (contains? brand-state :brand)
-      (let [brand-models (<! (api/get-models (:brand-id params)))]
-        (reset! brand-state brand-models)))
-    (if (and (contains? params :model-id))
+    (let [brand-models (<! (api/get-models (:brand-id params)))]
+      (reset! app-state brand-models))
+    (if (contains? params :model-id)
       (let [lines (<! (api/get-lines (:model-id params)))]
-        (swap! brand-state assoc :lines lines)))
-    (if (and (contains? params :line-id))
+        (swap! app-state assoc :lines lines)))
+    (if (contains? params :line-id)
       (let [offers (<! (api/get-offers (:line-id params)))]
-        (swap! brand-state assoc :offers offers)))
-    (om/root brand/brand-view brand-state
+        (swap! app-state assoc :offers offers)))
+    (om/root brand/brand-view app-state
              {:target     (. js/document (getElementById "app-content"))
               :init-state params})))
 
@@ -48,13 +44,15 @@
                    {:target (. js/document (getElementById "app-content"))}))
 
 (defroute "/brand/:brand-id" {:as params}
-          (render-brand params))
+          (js/scroll 0 0)
+          (app params))
 
 (defroute "/brand/:brand-id/model/:model-id" {:as params}
-          (render-brand params))
+          (js/scroll 0 0)
+          (app params))
 
 (defroute "/brand/:brand-id/model/:model-id/line/:line-id" {:as params}
-          (render-brand params))
+          (app params))
 
 (doto history
   (goog.events/listen EventType.NAVIGATE #(secretary/dispatch! (.-token %)))
@@ -66,4 +64,4 @@
     menu-state
     {:target (. js/document (getElementById "app-menu"))}))
 
-;(main)
+(main)

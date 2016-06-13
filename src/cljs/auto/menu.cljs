@@ -12,4 +12,8 @@
 (defcomponent menu [app owner]
   (render [_]
     (html
-      [:div [:ul.nav.menu (om/build-all menu-item app)]])))
+      [:div.container
+      [:div.navbar-header
+        [:a.navbar-brand {:href "#"} "Auto Price History"]]
+      [:div.collapse.navbar-collapse {:id "navbar-collapse-1"}
+       [:ul.nav.navbar-nav (om/build-all menu-item app)]]])))

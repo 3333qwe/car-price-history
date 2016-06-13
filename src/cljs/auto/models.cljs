@@ -8,13 +8,12 @@
 
 (defcomponent model-link [{:keys [model model-id]} owner]
   (render [_]
-    (html [:li
-           [:a {:href (str "#/brand/" (:brand_id model) "/model/" (:id model))
+    (html [:a.list-group-item {:href (str "#/brand/" (:brand_id model) "/model/" (:id model))
                 :class (if (= (int model-id) (:id model)) "active")}
-            (:name model)]])))
+            (:name model)])))
 
 (defcomponent models-list [{:keys [models] :as data} owner]
   (render-state [_ state]
     (html
       [:div.row
-       [:ul (map #(om/build model-link {:model % :model-id (:model-id state)}) models)]])))
+       [:div.list-group (map #(om/build model-link {:model % :model-id (:model-id state)}) models)]])))

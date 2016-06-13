@@ -14,7 +14,7 @@
                      :models (<!! (db/query ["SELECT id, name, name_ru, brand_id FROM models WHERE brand_id = ? ORDER BY name" id]))})))
 (defn get-lines
   [model-id]
-  (json/write-str (<!! (db/query ["SELECT * FROM lines WHERE model_id = ? ORDER BY engine" (Integer/parseInt model-id)]))))
+  (json/write-str (<!! (db/query ["SELECT * FROM lines WHERE model_id = ? ORDER BY engine, hp" (Integer/parseInt model-id)]))))
 
 (defn get-offers
   [params]

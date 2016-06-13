@@ -14,6 +14,6 @@
     (html
       [:div.container
       [:div.navbar-header
-        [:a.navbar-brand {:href "#"} "Auto Price History"]]
+        [:a.navbar-brand {:href "#"} "Car Price History"]]
       [:div.collapse.navbar-collapse {:id "navbar-collapse-1"}
        [:ul.nav.navbar-nav (om/build-all menu-item app)]]])))

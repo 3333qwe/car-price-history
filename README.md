@@ -1,8 +1,6 @@
-# auto
+# http://CarPriceHistory.ru
 
-http://CarPriceHistory.ru
-
-## Install an Run
+## Install and Run
 
 ```
 lein migrate

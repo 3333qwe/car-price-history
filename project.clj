@@ -23,10 +23,15 @@
                  [secretary "1.2.3"]
                  [racehub/om-bootstrap "0.6.1"]
                  [cljs-ajax "0.5.3"]
-                 [sablono "0.6.2"]]
+                 [sablono "0.6.2"]
+                 [ragtime "0.5.2"]]
 
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-environ "1.0.1"]]
+
+  :aliases {"sync" ["run" "-m" "auto.import/sync-offers"]
+            "migrate"  ["run" "-m" "auto.migration/migrate"]
+            "rollback" ["run" "-m" "auto.migration/rollback"]}
 
   :min-lein-version "2.5.3"
 

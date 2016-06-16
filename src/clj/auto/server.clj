@@ -15,6 +15,7 @@
            (GET "/v1/models/:brand-id" [brand-id] (api/get-models brand-id))
            (GET "/v1/lines/:model-id" [model-id] (api/get-lines model-id))
            (GET "/v1/offers/:line-id" {params :params} (api/get-offers params))
+           (GET "/v1/chart-data/:line-id" [line-id] (api/get-chart-data line-id))
            (GET "/" _
              {:status  200
               :headers {"Content-Type" "text/html; charset=utf-8"}

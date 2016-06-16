@@ -1,23 +1,27 @@
-(ns auto.chart)
+(ns auto.chart
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [om.core :as om :include-macros true]
+            [sablono.core :as html :refer-macros [html]]
+            [om-tools.core :refer-macros [defcomponent]]
+            [cljs.core.async :refer [<!]]
+            [auto.api :as api]))
 
 (defn add-rows [rows]
-  (js/console.log (pr-str rows))
   (let [data (js/google.visualization.DataTable.)]
     (.addColumn data "date" "Дата")
     (.addColumn data "number" "Цена")
-    (.addRows data (clj->js (vec (map #(vec [(js/Date. (* (:created_at %) 1000)) (:price %)]) rows))))
+    (.addRows data (clj->js (vec (map #(vec [(js/Date. (* (:date %) 1000)) (:price %)]) rows))))
     data))
 
 (defn chart-options []
   (clj->js {:title  "Изменение цены на комплектацию"
-            :width 400
+            :width  600
             :height 300}))
 
 (defn get-chart []
   (js/google.visualization.LineChart. (. js/document (getElementById "chart-container"))))
 
 (defn draw-chart [data]
-  (js/console.log "123")
   (let [data (add-rows data)
         options (chart-options)
         chart (get-chart)]
@@ -25,10 +29,19 @@
 
 (def loaded (atom false))
 
-(defn reder [data]
+(defn reder-chart [data]
   (if-not @loaded
     (do
-      (.load js/google.charts "visualization" "1.0" (clj->js {:packages ["corechart"]}))
+      (.load js/google.charts "visualization" "1.0" (clj->js {:packages ["corechart"] :language "ru"}))
       (.setOnLoadCallback js/google.charts (fn [] (draw-chart data)))
       (reset! loaded true))
     (draw-chart data)))
+
+(defcomponent chart [data owner]
+  (did-mount [_]
+    (go
+      (let [chart-data (<! (api/get-chart-data (:line-id (om/get-state owner))))]
+        (reder-chart chart-data))))
+  (render-state [_ state]
+    (html
+     [:div.chart {:id "chart-container"}])))

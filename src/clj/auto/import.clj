@@ -1,6 +1,7 @@
 (ns auto.import
   (:require [clojure.data.json :as json]
             [auto.db :as db]
+            [auto.utils :as utils]
             [auto.request :refer :all]
             [clojure.core.async :as a
              :refer [>! <! >!! <!! go go-loop chan buffer close! thread
@@ -47,14 +48,13 @@
     (first (if-not (zero? (count offers))
              offers
              (<!! (db/insert! :offers {:line_id    (:id line)
-                                       :line       ""
                                        :price      price
                                        :type       "av"
                                        :ext_id     offer-id
                                        :url        (str "http://avtomarket.ru/sale/" (offer "brand_name") "/" (offer "model_name") "/" (offer "id"))
                                        :img        (if photo (str "http://avtomarket.ru/stuff/oi/" photo) nil)
-                                       :data       (json/write-str offer)
-                                       :created_at (quot (System/currentTimeMillis) 1000)}))))))
+                                       :date (utils/get-date-timestamp)
+                                       :created_at (utils/now)}))))))
 
 (defn sync-offers []
   (doseq [brand (request-brands)]

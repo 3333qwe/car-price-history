@@ -22,5 +22,10 @@
         limit (if (contains? params :limit) (:limit params) 100)
         offset (if (contains? params :offset) (:offset params) 0)]
     (json/write-str (<!! (db/query ["
-      SELECT id, line_id, line, price, type, created_at, img, url
+      SELECT id, line_id, price, type, created_at, img, url
         FROM offers WHERE line_id = ? ORDER BY id DESC LIMIT ? OFFSET ?" line-id limit offset])))))
+
+(defn get-chart-data
+  [line-id]
+  (json/write-str (<!! (db/query ["
+    SELECT CEIL(AVG(price)) AS price, date FROM offers WHERE line_id = ? GROUP BY date ORDER BY date" (Integer/parseInt line-id)]))))

@@ -1,5 +1,14 @@
 # auto
 
+http://CarPriceHistory.ru
+
+## Install an Run
+
+```
+lein migrate
+lein sync
+lein run
+```
 
 ## Development
 
@@ -110,11 +119,7 @@ Now your app is running at
 [http://localhost:5000](http://localhost:5000) in production mode.
 ## License
 
-Copyright © 2016 FIXME
+Copyright © 2016 Ivan Volovikov
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
-
-## Chestnut
-
-Created with [Chestnut](http://plexus.github.io/chestnut/) 0.9.1 (3a675806).

@@ -35,3 +35,7 @@
 (defn get-offers
   [line-id]
   (call GET (str "/v1/offers/" line-id)))
+
+(defn get-chart-data
+  [line-id]
+  (call GET (str "/v1/chart-data/" line-id)))

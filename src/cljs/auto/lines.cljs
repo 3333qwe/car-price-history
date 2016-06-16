@@ -10,7 +10,7 @@
   (render [_]
     (html [:a.list-group-item {:href  (str "#/brand/" (:brand_id l) "/model/" (:model_id l) "/line/" (:id l))
                                :class (if (= (int line-id) (:id l)) "active")}
-           (str (:engine l) " (" (:hp l) "л.с.) " (:engine_type l) " " (:transmission l) " " (:drive l))])))
+           (str (:engine l) " л. (" (:hp l) "л.с.) " (:engine_type l) " " (:transmission l) " " (:drive l))])))
 
 (defcomponent lines-list [data owner]
   (render-state [_ state]

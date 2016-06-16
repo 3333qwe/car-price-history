@@ -9,7 +9,4 @@
    ["-h" "--help"]])
 
 (defn -main [& args]
-  (let [opts (:options (cli/parse-opts args cli-options))]
-    (case (:task opts)
-      "server" (server/run)
-      "sync" (import/sync-offers))))
+  (server/run))

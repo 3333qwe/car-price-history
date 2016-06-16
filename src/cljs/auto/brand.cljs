@@ -11,9 +11,6 @@
             [cljs.core.async :refer [<!]]))
 
 (defcomponent brand-view [data owner]
-  (did-mount [_]
-    (if (contains? @data :offers)
-      (chart/reder (:offers @data))))
   (render-state [_ state]
     (html [:div.container
            [:div.row
@@ -27,5 +24,5 @@
               (om/build lines/lines-list data {:init-state state})])
             (if (contains? state :line-id)
              [:div.col-md-7.col-sm-12 {:id "offers-list"}
-              [:div.chart {:id "chart-container"}]
-              (om/build offers/offers-list data {:init-state state})])]])))
+              [:div (om/build chart/chart data {:init-state state})]
+              [:div (om/build offers/offers-list data {:init-state state})]])]])))

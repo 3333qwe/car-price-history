@@ -111,6 +111,10 @@
     <orderEntry type="library" name="Leiningen: prismatic/plumbing:0.4.4" level="project" />
     <orderEntry type="library" name="Leiningen: prismatic/schema:0.4.3" level="project" />
     <orderEntry type="library" name="Leiningen: racehub/om-bootstrap:0.6.1" level="project" />
+    <orderEntry type="library" name="Leiningen: ragtime/ragtime.core:0.5.2" level="project" />
+    <orderEntry type="library" name="Leiningen: ragtime/ragtime.jdbc:0.5.2" level="project" />
+    <orderEntry type="library" name="Leiningen: ragtime:0.5.2" level="project" />
+    <orderEntry type="library" name="Leiningen: resauce:0.1.0" level="project" />
     <orderEntry type="library" name="Leiningen: ring-cors:0.1.7" level="project" />
     <orderEntry type="library" name="Leiningen: ring.middleware.logger:0.5.0" level="project" />
     <orderEntry type="library" name="Leiningen: ring/ring-anti-forgery:1.0.0" level="project" />

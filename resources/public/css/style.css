@@ -27,6 +27,6 @@ footer {
 
 #chart-container {
   height: 300px;
-  width: 600px;
+  width: 100%;
   background: url(/img/loader.gif) no-repeat center center;
 }

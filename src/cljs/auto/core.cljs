@@ -37,22 +37,29 @@
              {:target     (. js/document (getElementById "app-content"))
               :init-state params})))
 
+(defn scroll-to [element-id]
+  (let [element (. js/document (getElementById element-id))
+        position (.getBoundingClientRect element)]
+    (if-not (zero? (:top position)) (.scrollIntoView element))))
+
 (defroute "/" []
           (go (let [brands (<! (api/get-brands))]
-                (reset! app-state {:brands brands})))
-          (om/root brands/brands-list app-state
-                   {:target (. js/document (getElementById "app-content"))}))
+                (reset! app-state {:brands brands}))
+              (om/root brands/brands-list app-state
+                       {:target (. js/document (getElementById "app-content"))})))
 
 (defroute "/brand/:brand-id" {:as params}
-          (js/scroll 0 0)
           (app params))
 
 (defroute "/brand/:brand-id/model/:model-id" {:as params}
-          (js/scroll 0 0)
-          (app params))
+          (go
+            (<! (app params))
+            (scroll-to "lines-list")))
 
 (defroute "/brand/:brand-id/model/:model-id/line/:line-id" {:as params}
-          (app params))
+          (go
+            (<! (app params))
+            (scroll-to "offers-list")))
 
 (doto history
   (goog.events/listen EventType.NAVIGATE #(secretary/dispatch! (.-token %)))

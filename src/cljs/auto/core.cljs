@@ -49,6 +49,7 @@
                        {:target (. js/document (getElementById "app-content"))})))
 
 (defroute "/brand/:brand-id" {:as params}
+          (js/scroll 0 0)
           (app params))
 
 (defroute "/brand/:brand-id/model/:model-id" {:as params}

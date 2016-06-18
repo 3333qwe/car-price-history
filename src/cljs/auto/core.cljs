@@ -42,7 +42,7 @@
   (let [element-to (dom/by-id element-to-id)
         position-to (-> element-to .getBoundingClientRect .-top)
         top (-> js/document .-body .-scrollTop)
-        height (-> js/window .-innerHeight)]
+        height (+ top (-> js/window .-innerHeight))]
     (if (or (< position-to top) (> position-to height)) (.scrollIntoView element-to))))
 
 (defroute "/" []

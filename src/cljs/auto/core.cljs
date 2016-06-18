@@ -43,7 +43,6 @@
         position-to (-> element-to .-offsetTop)
         top (-> js/document .-body .-scrollTop)
         height (+ top (-> js/window .-innerHeight))]
-    (js/console.log position-to)
     (if (or (< position-to top) (> position-to height)) (.scrollIntoView element-to))))
 
 (defroute "/" []

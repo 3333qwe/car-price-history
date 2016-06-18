@@ -8,7 +8,8 @@
             [auto.brands :as brands]
             [auto.brand :as brand]
             [auto.models :as models]
-            [cljs.core.async :refer [<!]])
+            [cljs.core.async :refer [<!]]
+            [domina :as dom])
   (:import goog.History
            goog.history.EventType))
 
@@ -34,23 +35,25 @@
       (let [offers (<! (api/get-offers (:line-id params)))]
         (swap! app-state assoc :offers offers)))
     (om/root brand/brand-view app-state
-             {:target     (. js/document (getElementById "app-content"))
+             {:target     (dom/by-id "app-content")
               :init-state params})))
 
-(defn scroll-to [element-id]
-  (let [element (. js/document (getElementById element-id))
-        position (.getBoundingClientRect element)]
-    (if-not (zero? (:top position)) (.scrollIntoView element))))
+(defn scroll-to [element-to-id]
+  (let [element-to (dom/by-id element-to-id)
+        position-to (-> element-to .getBoundingClientRect .-top)
+        top (-> js/document .-body .-scrollTop)
+        height (-> js/window .-innerHeight)]
+    (if (or (< position-to top) (> position-to height)) (.scrollIntoView element-to))))
 
 (defroute "/" []
           (go (let [brands (<! (api/get-brands))]
                 (reset! app-state {:brands brands}))
               (om/root brands/brands-list app-state
-                       {:target (. js/document (getElementById "app-content"))})))
+                       {:target (dom/by-id "app-content")})))
 
 (defroute "/brand/:brand-id" {:as params}
-          (js/scroll 0 0)
-          (app params))
+          (app params)
+          (js/scroll 0 0))
 
 (defroute "/brand/:brand-id/model/:model-id" {:as params}
           (go
@@ -70,6 +73,6 @@
   (om/root
     menu/menu
     menu-state
-    {:target (. js/document (getElementById "app-menu"))}))
+    {:target (dom/by-id "app-menu")}))
 
 (main)

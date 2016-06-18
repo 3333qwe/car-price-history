@@ -24,7 +24,8 @@
                  [racehub/om-bootstrap "0.6.1"]
                  [cljs-ajax "0.5.3"]
                  [sablono "0.6.2"]
-                 [ragtime "0.5.2"]]
+                 [ragtime "0.5.2"]
+                 [domina "1.0.3"]]
 
   :plugins [[lein-cljsbuild "1.1.1"]
             [lein-environ "1.0.1"]]

@@ -10,7 +10,7 @@
 (defcomponent brand-block [{:keys [data item]} owner]
   (render [_]
     (html
-      [:div.col-lg-3.col-sm-4.text-center
+      [:div.col-lg-2.col-sm-3.text-center
        [:a {:href (str "#/brand/" (:id item))}
         [:img.img-circle.img-responsive.img-center {:src (str "/img/" (:id item) ".gif") :alt (:name item)}]]
        [:h3 (:name item)]])))

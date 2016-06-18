@@ -40,9 +40,10 @@
 
 (defn scroll-to [element-to-id]
   (let [element-to (dom/by-id element-to-id)
-        position-to (-> element-to .getBoundingClientRect .-top)
+        position-to (-> element-to .-offsetTop)
         top (-> js/document .-body .-scrollTop)
         height (+ top (-> js/window .-innerHeight))]
+    (js/console.log position-to)
     (if (or (< position-to top) (> position-to height)) (.scrollIntoView element-to))))
 
 (defroute "/" []

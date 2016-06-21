@@ -10,8 +10,12 @@
             [auto.chart :as chart]
             [cljs.core.async :refer [<!]]))
 
-(defcomponent brand-view [data owner]
-  (render-state [_ state]
+(defcomponent brand-view [{:keys [state] :as data} owner]
+  (will-mount [_]
+    (om/transact! data #(assoc % :app-mounted owner)))
+  (will-unmount [_]
+    (om/transact! data #(assoc % :app-mounted false)))
+  (render [_]
     (html [:div.container
            [:div.row
             [:div.col-md-12
@@ -19,11 +23,12 @@
               [:img.brand-icon {:src (str "/img/" (:id (:brand data)) ".gif")}]
               (:name (:brand data))]]
             [:div.col-md-2.col-sm-4.models {:id "models-list"}
-             (om/build models/models-list data {:init-state state})]
+             (om/build models/models-list data)]
             (if (contains? state :model-id)
              [:div.col-md-3.col-sm-8 {:id "lines-list"}
-              (om/build lines/lines-list data {:init-state state})])
+              (om/build lines/lines-list data)])
             (if (contains? state :line-id)
-             [:div.col-md-7.col-sm-12 {:id "offers-list"}
-              [:div (om/build chart/chart data {:init-state state})]
-              [:div (om/build offers/offers-list data {:init-state state})]])]])))
+             [:div.col-md-7.col-sm-12
+              [:div (om/build chart/chart data)]
+              [:div {:id "offers-list"}
+               (om/build offers/offers-list data)]])]])))

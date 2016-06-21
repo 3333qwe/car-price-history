@@ -18,8 +18,7 @@
 
 (def history (History.))
 
-(def menu-state
-  (atom []))
+(def menu-state (atom []))
 
 ; State of the application
 (def app-state (atom {}))
@@ -27,16 +26,18 @@
 (defn app [params]
   (go
     (let [brand-models (<! (api/get-models (:brand-id params)))]
-      (reset! app-state brand-models))
+      (swap! app-state merge brand-models))
     (if (contains? params :model-id)
       (let [lines (<! (api/get-lines (:model-id params)))]
         (swap! app-state assoc :lines lines)))
     (if (contains? params :line-id)
       (let [offers (<! (api/get-offers (:line-id params)))]
         (swap! app-state assoc :offers offers)))
-    (om/root brand/brand-view app-state
-             {:target     (dom/by-id "app-content")
-              :init-state params})))
+    (swap! app-state assoc :state params)
+    (if-let [mounted (:app-mounted @app-state)]
+      (om/refresh! mounted)
+      (om/root brand/brand-view app-state
+               {:target (dom/by-id "app-content")}))))
 
 (defn scroll-to [element-to-id]
   (let [element-to (dom/by-id element-to-id)

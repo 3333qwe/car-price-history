@@ -29,19 +29,21 @@
 
 (def loaded (atom false))
 
-(defn reder-chart [data]
-  (if-not @loaded
-    (do
-      (.load js/google.charts "visualization" "1.0" (clj->js {:packages ["corechart"] :language "ru"}))
-      (.setOnLoadCallback js/google.charts (fn [] (draw-chart data)))
-      (reset! loaded true))
-    (draw-chart data)))
+(defn reder-chart [line-id]
+  (go
+    (let [data (<! (api/get-chart-data line-id))]
+      (if @loaded
+        (draw-chart data)
+        (do
+          (.load js/google.charts "visualization" "1.0" (clj->js {:packages ["corechart"] :language "ru"}))
+          (.setOnLoadCallback js/google.charts (fn [] (draw-chart data)))
+          (reset! loaded true))))))
 
 (defcomponent chart [data owner]
   (did-mount [_]
-    (go
-      (let [chart-data (<! (api/get-chart-data (:line-id (om/get-state owner))))]
-        (reder-chart chart-data))))
-  (render-state [_ state]
+    (reder-chart (:line-id (:state data))))
+  (did-update [_ _ _]
+    (reder-chart (:line-id (:state data))))
+  (render [_]
     (html
      [:div.chart {:id "chart-container"}])))

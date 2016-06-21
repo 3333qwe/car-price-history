@@ -12,8 +12,8 @@
                                :class (if (= (int line-id) (:id l)) "active")}
            (str (:engine l) " л. (" (:hp l) "л.с.) " (:engine_type l) " " (:transmission l) " " (:drive l))])))
 
-(defcomponent lines-list [data owner]
-  (render-state [_ state]
+(defcomponent lines-list [{:keys [state] :as data} owner]
+  (render [_]
     (html
       (if (zero? (count (:lines data)))
         [:div.well.well-sm "Нет данных"]

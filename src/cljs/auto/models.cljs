@@ -12,8 +12,8 @@
                 :class (if (= (int model-id) (:id model)) "active")}
             (:name model)])))
 
-(defcomponent models-list [{:keys [models] :as data} owner]
-  (render-state [_ state]
+(defcomponent models-list [{:keys [models state] :as data} owner]
+  (render [_]
     (html
       [:div.row
        [:div.list-group (map #(om/build model-link {:model % :model-id (:model-id state)}) models)]])))
